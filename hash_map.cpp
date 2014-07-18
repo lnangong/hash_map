@@ -1,25 +1,26 @@
-#ifndef _HASH_MAP_H_INCLUDED_
-#define _HASH_MAP_H_INCLUDED_
+#include <iosteam>
+#include "hash_map.h"
 
-typedef struct List
-{
-        int value;            //list value
-        struct List* next;    //next list
-        struct List* prev;    //previous list
-}List;
+using namespace std;
 
-template <class T>
-class hash_map { 
+size_t hash_map::hash (const Key& key);
+
+iterator hash_map::begin(){
+	/*Returns an iterator for the container ct that
+	 points to the first data item in ct*/
+}
+
+iterator hash_map::end(){
+	/*It is a flag and does NOT return the last element*/
 
 }
-#endif
-size_t hash (const Key& key);
 
-iterator begin();
-iterator end();
-size_t size();
-iterator insert (const Key& key, const Value& value); 
-void erase (Iterator pos); 
-iterator find (const Key& key); 
-Value operator[] (const Key& key);
+                size_t size();
 
+                iterator insert (const Key& key, const Value& value);
+
+                void erase (Iterator pos);
+
+                iterator find (const Key& key);
+
+                Value operator[] (const Key& key);
