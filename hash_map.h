@@ -1,12 +1,16 @@
-#ifndef _HASH_MAP_H_INCLUDED_
-#define _HASH_MAP_H_INCLUDED_
+#ifndef _HASH_MAP_H_
+#define _HASH_MAP_H_
 
+#include "iterator.h"
 
-template <typename K, typename V>
+template <typename Key, typename Value>
 class hash_map { 
 	public:
 		class iterator;
-		
+	
+		hash_map(int capacity = 100);
+		~hash_map();
+
 		iterator begin();
 		iterator end();
 		size_t size();
