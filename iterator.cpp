@@ -1,11 +1,5 @@
 
-class iterator{
+#include "iterator.h"
 
-private:
-	
-public:
-	
-	friend class hash_map;
-		
-}
+
 

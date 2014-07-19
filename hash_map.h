@@ -1,5 +1,5 @@
 #ifndef _HASH_MAP_H_
-#define _HASH_MAP_H_
+#define _HASH_MAP_H_		//Header guard
 
 #include "node.h"
 
@@ -7,7 +7,8 @@ template <typename Key, typename Value>
 class hash_map { 
 private:
 	static const int capacity=100;
-	node<Key,Value>* item[capacity];
+	typedef node<Key,Value> Node;
+	Node* item[capacity];
 
 public:
 	class iterator;
@@ -28,16 +29,7 @@ private:
 		
 };
 
-template <typename Key, typename Value>
-class hash_map<Key,Value>::iterator{
 
-private:
-
-public:
-
-        friend class hash_map;
-
-};
 
 #endif
 
