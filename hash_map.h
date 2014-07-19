@@ -1,27 +1,43 @@
 #ifndef _HASH_MAP_H_
 #define _HASH_MAP_H_
 
-#include "iterator.h"
+#include "node.h"
 
 template <typename Key, typename Value>
 class hash_map { 
-	public:
-		class iterator;
+private:
+	static const int capacity=100;
+	node<Key,Value>* item[capacity];
+
+public:
+	class iterator;
 	
-		hash_map(int capacity = 100);
-		~hash_map();
+	hash_map(int capacity = 100);
+	~hash_map();
+		
+	size_t hash (const Key& key);
+	iterator begin();
+	iterator end();
+	size_t size();
+	iterator insert (const Key& key, const Value& value); 
+	void erase (iterator pos); 
+	iterator find (const Key& key); 
+	Value operator[] (const Key& key);
+private:
+	size_t hash_size;
+		
+};
 
-		iterator begin();
-		iterator end();
-		size_t size();
-		iterator insert (const Key& key, const Value& value); 
-		void erase (Iterator pos); 
-		iterator find (const Key& key); 
-		Value operator[] (const Key& key);
-	private:
-		int n;
-		size_t hash (const Key& key);
+template <typename Key, typename Value>
+class hash_map<Key,Value>::iterator{
 
-}
+private:
+
+public:
+
+        friend class hash_map;
+
+};
+
 #endif
 
