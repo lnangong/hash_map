@@ -1,2 +1,2 @@
-hash_map
+hash_map: hashing with chaining
 ========
