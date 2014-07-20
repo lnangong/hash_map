@@ -29,7 +29,7 @@ public:
 public:
 	class iterator{
 	private:
-        	node<Key,Value>* item;
+        	node<Key,Value>* _item;
         	iterator(node<Key,Value>* item);
 
 	public:
