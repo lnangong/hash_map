@@ -1,7 +1,7 @@
 hash_map: hashing with chaining
 ===============================
 
-Author:Long Nangong
+Author:Long(Ryan) Nangong
 
 Created on July 15, 2014
 
