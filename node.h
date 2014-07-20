@@ -1,5 +1,5 @@
-#ifndef _NODE_H_INCLUDED_
-#define _NODE_H_INCLUDED_
+#ifndef _NODE_H_
+#define _NODE_H_
 
 template <typename Key, typename Value>
 class node{
@@ -10,5 +10,6 @@ private:
         node<Key,Value>* prev;          //previous node
         friend class hash_map;
 };
+
 
 #endif

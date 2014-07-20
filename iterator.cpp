@@ -1,7 +1,7 @@
 
-#include "iterator.h"
+#include "hash_map.h"
 
-//typedef hash_map::iterator<Key,Value> HashIterator;
+typedef hash_map<Key,Value>::iterator<Key,Value> HashIterator;
 
 HashIterator& HashIterator::operator++(){
 	item = item->next;

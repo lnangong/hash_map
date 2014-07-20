@@ -3,19 +3,20 @@
 
 #include "node.h"
 
+
+
 template <typename Key, typename Value>
 class hash_map { 
 private:
 	static const int capacity=100;
-	typedef node<Key,Value> Node;
-	Node* item[capacity];
+	node<Key,Value>* HashTable[capacity];
+	size_t hash_size;
 
 public:
-	class iterator;
+	class iterator;		//class proto.
 	
-	hash_map(int capacity = 100);
+	hash_map();
 	~hash_map();
-		
 	size_t hash (const Key& key);
 	iterator begin();
 	iterator end();
@@ -24,11 +25,21 @@ public:
 	void erase (iterator pos); 
 	iterator find (const Key& key); 
 	Value operator[] (const Key& key);
-private:
-	size_t hash_size;
+
+public:
+	class iterator{
+	private:
+        	node<Key,Value>* item;
+        	iterator(node<Key,Value>* item);
+
+	public:
+        	iterator& operator++();
+        	iterator& operator--();
+        	friend class hash_map;
+
+	};
 		
 };
-
 
 
 #endif
