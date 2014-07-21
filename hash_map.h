@@ -7,9 +7,9 @@ template <typename Key, typename Value>
 class hash_map { 			//Hash_map interface
 private:
 	class entry{			//Entry node
-	private:
-        	Key key;              	//Entry key
-        	Value value;          	//Entry value
+	public:
+        	Key _key;              	//Entry key
+        	Value _value;          	//Entry value
         	entry* next;          	//next entry
         	entry* prev;          	//previous entry
 	};
@@ -17,12 +17,13 @@ private:
 public:
 	class iterator{			//Hash_map iterator
 	private:
-        	entry* _item;
-        	iterator(entry* item);
+        	entry* _bucket;
+        	iterator(entry* bucket);
 
 	public:
         	iterator& operator++();
         	iterator& operator--();
+		friend class hash_map;
 
 	};
 	
@@ -34,8 +35,8 @@ public:
 	iterator begin();
 	iterator end();
 	iterator insert (const Key& key, const Value& value); 
+	iterator find (const Key& key);
 	void erase (iterator pos); 
-	iterator find (const Key& key); 
 	Value operator[] (const Key& key);
 
 private:
