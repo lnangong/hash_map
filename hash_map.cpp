@@ -9,14 +9,19 @@ using namespace std;
 //Constructor
 template <typename Key, typename Value>
 hash_map<Key,Value>::hash_map(){
-	for(int i = 0; i < capacity; i++)
-		HashTable[i] = new entry;
+	try{
+		for(int i = 0; i < capacity; i++)
+			HashTable[i] = new entry;
 
-	header = new entry;
-	trailer = new entry;
-	header->next = trailer;
-	trailer->prev = header;	
-	hash_size = 0;
+		header = new entry;
+		trailer = new entry;
+		header->next = trailer;
+		trailer->prev = header;	
+		hash_size = 0;
+
+	}catch(bad_alloc& ba){
+		cerr << "exception caught:" << ba.what() << endl;
+	}
 }
 
 
@@ -48,25 +53,32 @@ size_t hash_map<Key,Value>::size(){	return hash_size;	}
 /*Returns an iterator for the container hash_map that
 	points to the first data entry in hash_map*/
 template <typename Key, typename Value>
-typename hash_map<Key,Valu>::iterator 
+typename hash_map<Key,Value>::iterator 
 hash_map<Key,Value>::begin(){	return iterator(header->next)	}
 
 
 /*Returns an iterator for the container hash_map that
 	points to the last data entry in hash_map*/
 template <typename Key, typename Value>
-typename hash_map<Key,Valu>::iterator 
-iterator hash_map::end(){	return iterator(trailer);	}
+typename hash_map<Key,Value>::iterator 
+hash_map<Key,Value>::end(){	return iterator(trailer);	}
 
 
 //Hash insert
 template <typename Key, typename Value>
-typename hash_map<Key,Valu>::iterator 
-iterator insert (const Key& key, const Value& value){
+typename hash_map<Key,Value>::iterator 
+hash_map<Key,Value>::insert (const Key& key, const Value& value){
 	size_t index = hash(key);		//Get hash index
-	entry* bucket = new entry;		//Create new bucket
-	bucket->_key = key;
-	bucket->_value = value;
+	try{
+		entry* bucket = new entry;		//Create new bucket
+		bucket->_key = key;
+		bucket->_value = value;
+	}catch(bad_alloc& ba){
+		cerr << "exception caught:" << ba.what() << endl;
+		return iterator(NULL);
+	}
+
+	hash_size++;
 	
 	if(Header->next == Trailer){		//Empty hash map
 		HashTable[index]->next = bucket;//Points to first bucket in the index chain
@@ -123,26 +135,62 @@ iterator insert (const Key& key, const Value& value){
 
 //Hash find
 template <typename Key, typename Value>
-typename hash_map<Key,Valu>::iterator 
-iterator find (const Key& key){
+typename hash_map<Key,Value>::iterator 
+hash_map<Key,Value>::find (const Key& key){
 	size_t index = hash(key);
 	iterator iter(HashTable[index]);
 	
-	for( ; iter->_bucket->next != NULL; ++iter){
+	for( ; hash[iter->_bucket->_key] < index+1; ++iter){
 		if(iter->_bucket->_key == key)
 			return iter;
 	}
-
-	return iter(NULL);
 	
+	cout << "Item with specified key is not found in the hash map!" << endl;
+	return iter(NULL);
 	
 }
 
 
+template <typename Key, typename Value>
+hash_map<Key,Value>::erase (Iterator pos){
+	if(pos->bucket != NULL){
+		size_t index = hash[pos->_bucket->_key];
+	
+		if(HashTable[index]->next == pos->_bucket && 
+			HashTable[index]->prev == pos->_bucket){
+			HashTable[index]->next = NULL;
+			HashTable[index]->prev = NULL;
+			pos->_bucket->prev->next = pos->_bucket->next;
+                        pos->_bucket->next->prev = pos->_bucket->prev;
+			
+			delete pos->_bucket;
+		}
+		else if(HashTable[index]->next == pos->_bucket){
+			HashTable[index]->next = pos->_bucket->next;
+			pos->_bucket->prev->next = pos->_bucket->next;
+			pos->_bucket->next->prev = pos->_bucket->prev;
+			
+			delete pos->_bucket;
+		}
+		else if(HashTable[index]->prev == pos->_bucket){
+			HashTable[index]->prev = pos->_bucket->prev;
+			pos->_bucket->prev->next = pos->_bucket->next;
+                	pos->_bucket->next->prev = pos->_bucket->prev;
+			
+			delete pos->_bucket;
+		}
+		else{
+			pos->_bucket->prev->next = pos->_bucket->next;
+                        pos->_bucket->next->prev = pos->_bucket->prev;
 
-void erase (Iterator pos);
+                        delete pos->_bucket;
+		}	
+	}
+	
+	hash_size--;
+}
 
-             
+            
 Value operator[] (const Key& key);
 
 
