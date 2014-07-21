@@ -1,4 +1,4 @@
-hash_map: hashing with chaining
+hash_map: hash with chaining
 ===============================
 
 Author:Long(Ryan) Nangong
