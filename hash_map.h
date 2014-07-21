@@ -43,7 +43,7 @@ private:
 	static const int capacity=100;
 	entry* HashTable[capacity];
 	entry* header;
-	emtry* trailer;
+	entry* trailer;
 	size_t hash_size;
 	
 };
