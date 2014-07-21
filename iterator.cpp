@@ -1,14 +1,19 @@
 
 #include "hash_map.h"
 
-typedef hash_map<Key,Value>::iterator<Key,Value> HashIterator;
+template <typename Key, typename Value>
+hash_map<Key,Value>::iterator::iterator(entry* item):_item(item){}
 
-HashIterator& HashIterator::operator++(){
+template <typename Key, typename Value>
+typename hash_map<Key,Value>::iterator&
+hash_map<Key,Value>::iterator::operator++(){
 	item = item->next;
 	return *this;
 }
 
-HashIterator& HashIterator::operator--(){
+template <typename Key, typename Value>
+typename hash_map<Key,Value>::iterator&
+hash_map<Key,Value>::iterator::operator++(){
         item = item->prev;
         return *this;
 }

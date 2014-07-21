@@ -1,44 +1,50 @@
+
 #ifndef _HASH_MAP_H_
 #define _HASH_MAP_H_		//Header guard
 
-#include "node.h"
-
-
 
 template <typename Key, typename Value>
-class hash_map { 
+class hash_map { 			//Hash_map interface
 private:
-	static const int capacity=100;
-	node<Key,Value>* HashTable[capacity];
-	size_t hash_size;
+	class entry{			//Entry node
+	private:
+        	Key key;              	//Entry key
+        	Value value;          	//Entry value
+        	entry* next;          	//next entry
+        	entry* prev;          	//previous entry
+	};
 
 public:
-	class iterator;		//class proto.
+	class iterator{			//Hash_map iterator
+	private:
+        	entry* _item;
+        	iterator(entry* item);
+
+	public:
+        	iterator& operator++();
+        	iterator& operator--();
+
+	};
 	
+public:
 	hash_map();
 	~hash_map();
 	size_t hash (const Key& key);
+	size_t size();
 	iterator begin();
 	iterator end();
-	size_t size();
 	iterator insert (const Key& key, const Value& value); 
 	void erase (iterator pos); 
 	iterator find (const Key& key); 
 	Value operator[] (const Key& key);
 
-public:
-	class iterator{
-	private:
-        	node<Key,Value>* _item;
-        	iterator(node<Key,Value>* item);
-
-	public:
-        	iterator& operator++();
-        	iterator& operator--();
-        	friend class hash_map;
-
-	};
-		
+private:
+	static const int capacity=100;
+	entry* HashTable[capacity];
+	entry* header;
+	emtry* trailer;
+	size_t hash_size;
+	
 };
 
 
