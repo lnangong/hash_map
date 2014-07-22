@@ -190,8 +190,13 @@ hash_map<Key,Value>::erase (Iterator pos){
 	hash_size--;
 }
 
-            
-Value operator[] (const Key& key);
+
+template <typename Key, typename Value>           
+Value hash_map<Key,Value>::operator[] (const Key& key){
+	iterator iter = find(key);
+
+	return iter->bucket->_value;
+}
 
 
 
