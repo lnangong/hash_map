@@ -1,4 +1,30 @@
 
+/*
+ *This hash map C++ STL container is designed by combination of hash table and indexed chaining, 
+ *which is doubly linked list can be indexed by the given key.
+ *
+ *	Hash map design:
+ *
+ *             header
+		^
+ *              v
+ *      [0]-->(key,val)<-->(key,val)<-->(key,val)<-->points to first (key,val) in the index[2]
+ *      [1]
+ *	[2]-->(key.val)<-->points to first (key,val) in the index[n]
+ *	[3]
+ *       :
+ *	 :
+ *	[n]-->(key,val)<-->(key,val)<-->trailer
+ *
+ *      *Note: each table index will points to the first entry and last entry in the
+ *            index chain, respectively. In the following comments will use 'entry' and 
+ *           'bucket' interchangeably, they are same thing.
+ *
+ *      Author: Long(Ryan) Nangong
+ *      Email: lnangong@hawk.iit.edu
+ *	Created on: July 15, 2014
+*/
+
 #include <iosteam>
 #include <string>
 #include "hash_map.h"
@@ -133,57 +159,61 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 }
 
 
-//Hash find
+//Hash map find
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator 
 hash_map<Key,Value>::find (const Key& key){
-	size_t index = hash(key);
-	iterator iter(HashTable[index]);
+	size_t index = hash(key);		//Find the index by key
+	iterator iter(HashTable[index]);	//First iterator entry
 	
-	for( ; hash[iter->_bucket->_key] < index+1; ++iter){
+	for( ; hash[iter->_bucket->_key] < index+1; ++iter){	//Search the given key int index chain
 		if(iter->_bucket->_key == key)
 			return iter;
 	}
-	
+
+	//Entry is not found in the index chain
 	cout << "Item with specified key is not found in the hash map!" << endl;
 	return iter(NULL);
 	
 }
 
 
+//Hash map erase
 template <typename Key, typename Value>
 hash_map<Key,Value>::erase (Iterator pos){
-	if(pos->bucket != NULL){
-		size_t index = hash[pos->_bucket->_key];
+	if(pos->_bucket != NULL){
+		if(pos->_bucket != header && pos->_bucket != trailer){  //Not position of header or trailer
+			size_t index = hash[pos->_bucket->_key];	
 	
-		if(HashTable[index]->next == pos->_bucket && 
-			HashTable[index]->prev == pos->_bucket){
-			HashTable[index]->next = NULL;
-			HashTable[index]->prev = NULL;
-			pos->_bucket->prev->next = pos->_bucket->next;
-                        pos->_bucket->next->prev = pos->_bucket->prev;
+			if(HashTable[index]->next == pos->_bucket && 
+				HashTable[index]->prev == pos->_bucket){	//There is only one bucket in 
+				HashTable[index]->next = NULL;			//the index chain
+				HashTable[index]->prev = NULL;
+				pos->_bucket->prev->next = pos->_bucket->next;
+                        	pos->_bucket->next->prev = pos->_bucket->prev;
 			
-			delete pos->_bucket;
-		}
-		else if(HashTable[index]->next == pos->_bucket){
-			HashTable[index]->next = pos->_bucket->next;
-			pos->_bucket->prev->next = pos->_bucket->next;
-			pos->_bucket->next->prev = pos->_bucket->prev;
+				delete pos->_bucket;
+			}
+			else if(HashTable[index]->next == pos->_bucket){	//Delete the first bucket in
+				HashTable[index]->next = pos->_bucket->next;	//the index chain
+				pos->_bucket->prev->next = pos->_bucket->next;
+				pos->_bucket->next->prev = pos->_bucket->prev;
 			
-			delete pos->_bucket;
-		}
-		else if(HashTable[index]->prev == pos->_bucket){
-			HashTable[index]->prev = pos->_bucket->prev;
-			pos->_bucket->prev->next = pos->_bucket->next;
-                	pos->_bucket->next->prev = pos->_bucket->prev;
+				delete pos->_bucket;
+			}
+			else if(HashTable[index]->prev == pos->_bucket){	//Delete the last bucket in 
+				HashTable[index]->prev = pos->_bucket->prev;	//the index chain
+				pos->_bucket->prev->next = pos->_bucket->next;
+                		pos->_bucket->next->prev = pos->_bucket->prev;
 			
-			delete pos->_bucket;
-		}
-		else{
-			pos->_bucket->prev->next = pos->_bucket->next;
-                        pos->_bucket->next->prev = pos->_bucket->prev;
+				delete pos->_bucket;
+			}
+			else{
+				pos->_bucket->prev->next = pos->_bucket->next;
+                       		pos->_bucket->next->prev = pos->_bucket->prev;
 
-                        delete pos->_bucket;
+                		delete pos->_bucket;
+			}
 		}	
 	}
 	
@@ -191,11 +221,12 @@ hash_map<Key,Value>::erase (Iterator pos){
 }
 
 
+//Hash map operator [] definition
 template <typename Key, typename Value>           
 Value hash_map<Key,Value>::operator[] (const Key& key){
 	iterator iter = find(key);
 
-	return iter->bucket->_value;
+	return iter->_bucket->_value;
 }
 
 
