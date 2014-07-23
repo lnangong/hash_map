@@ -8,9 +8,6 @@ Created on July 15, 2014
 Email: lnangong@hawk.iit.edu
 
 Implemented member functions of hash_map:
-  hash_map();
-	~hash_map();
-	
 	size_t hash (const Key& key);
 	size_t size();
 	iterator begin();
