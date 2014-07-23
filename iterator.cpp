@@ -1,8 +1,6 @@
 
-//This is member function of the iterator class
+//These are member functions of the iterator class
 
-
-#include "hash_map.h"
 
 template <typename Key, typename Value>
 hash_map<Key,Value>::iterator::iterator(entry* bucket):_bucket(bucket){}
@@ -16,9 +14,22 @@ hash_map<Key,Value>::iterator::operator++(){
 
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator&
-hash_map<Key,Value>::iterator::operator++(){
+hash_map<Key,Value>::iterator::operator--(){
         _bucket = _bucket->prev;
         return *this;
 }
+
+template <typename Key, typename Value>
+bool hash_map<Key,Value>::iterator::operator==(const iterator& p) const{ return _bucket == p._bucket; } 
+
+
+template <typename Key, typename Value>
+bool hash_map<Key,Value>::iterator::operator!=(const iterator& p) const{ return _bucket != p._bucket; }
+
+
+template <typename Key, typename Value>
+Value& hash_map<Key,Value>::iterator::operator*(){ return _bucket->_value; }
+
+
 
 

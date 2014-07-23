@@ -23,11 +23,14 @@ public:
 	public:
         	iterator& operator++();
         	iterator& operator--();
+		bool operator==(const iterator& p) const;
+		bool operator!=(const iterator& p) const;
+		Value& operator*();
 		friend class hash_map;
 
 	};
 	
-public:
+public:					//Hash map member functions
 	hash_map();
 	~hash_map();
 	size_t hash (const Key& key);
@@ -39,7 +42,7 @@ public:
 	void erase (iterator pos); 
 	Value operator[] (const Key& key);
 
-private:
+private:					//Hash map private variable
 	static const int capacity=100;
 	entry* HashTable[capacity];
 	entry* header;
@@ -48,6 +51,8 @@ private:
 	
 };
 
+#include "hash_map.cpp"  //Template definition must be visible to compiler
+#include "iterator.cpp"
 
 #endif
 
