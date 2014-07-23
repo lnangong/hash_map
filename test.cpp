@@ -19,7 +19,7 @@ int main(){
 	HashMap.insert("beta1",40);
 	HashMap.insert("gamma",50);
 	HashMap.insert("gamma1",60);
-	
+	cout << "hash size = " << HashMap.size() << endl;	
 
 	//iterator forward
 	cout << "iterator forward:" << endl;
@@ -46,6 +46,8 @@ int main(){
 	HashMap.erase(it = HashMap.find("beta"));
         for(hash_map<string,int>::iterator it = HashMap.begin(); it != HashMap.end(); ++it)
                 cout << *it << endl;
+
+	cout << "hash size = " << HashMap.size() << endl;
         cout << "\n";
 
 	
