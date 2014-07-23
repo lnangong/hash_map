@@ -37,6 +37,8 @@ public:					//Hash map member functions
 	size_t size();
 	iterator begin();
 	iterator end();
+	iterator rbegin();
+	iterator rend();
 	iterator insert (const Key& key, const Value& value); 
 	iterator find (const Key& key);
 	void erase (iterator pos); 

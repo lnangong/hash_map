@@ -92,6 +92,18 @@ typename hash_map<Key,Value>::iterator
 hash_map<Key,Value>::end(){	return iterator(trailer);	}
 
 
+/*Begin for reverse iterator*/
+template <typename Key, typename Value>
+typename hash_map<Key,Value>::iterator
+hash_map<Key,Value>::rbegin(){   return iterator(trailer->prev);  }
+
+
+/*End for reverse iterator*/
+template <typename Key, typename Value>
+typename hash_map<Key,Value>::iterator
+hash_map<Key,Value>::rend(){     return iterator(header);       }
+
+
 //Hash insert
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator 
@@ -149,11 +161,23 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 		}
 	
 		//Insert bucket to the index chain, which is not empty
-		bucket->next = HashTable[index]->next;		//Insert bucket in the first position in the index chain
-		bucket->prev = HashTable[index]->next->prev;
-		HashTable[index]->next = bucket;
-	
+		if(index == hash(header->next->_key)){ //insert bucket before the header
+			header->next = bucket;
+			bucket->next = HashTable[index]->next; 
+			bucket->prev = header;
+			HashTable[index]->next->prev = bucket;
+			HashTable[index]->next = bucket;
+		}
+		else{
+			bucket->next = HashTable[index]->next;		//Insert bucket in the first position in the index chain
+			bucket->prev = HashTable[index]->next->prev;
+			bucket->next->prev = bucket;
+			bucket->prev->next = bucket;
+			HashTable[index]->next = bucket;
+		}
+
 		return iterator(bucket);
+
 	}catch(bad_alloc& ba){
 		cerr << "exception caught:" << ba.what() << endl;
 		return iterator(NULL);
@@ -166,17 +190,18 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator 
 hash_map<Key,Value>::find (const Key& key){
-	size_t index = hash(key);		//Find the index by key
-	iterator iter(HashTable[index]);	//First iterator entry
+	const size_t index = hash(key);		//Find the index by key
+	iterator iter(HashTable[index]->next);	//First iterator entry
 	
-	for( ; hash(iter._bucket->_key) < index+1; ++iter){	//Search the given key int index chain
+	for( ; hash(iter._bucket->_key) == index ; ++iter){	//Search the given key int index chain
 		if(iter._bucket->_key == key)
 			return iter;
 	}
 
 	//Entry is not found in the index chain
-	cout << "Item with specified key is not found in the hash map!" << endl;
-	return iter._bucket = NULL;
+	iter._bucket = NULL;
+	cout << "Entry with specified key<" << key << "> is not found in the hash map!" << endl;
+	return iter;
 	
 }
 
@@ -187,28 +212,50 @@ void hash_map<Key,Value>::erase (iterator pos){
 	if(pos._bucket != NULL){
 		if(pos._bucket != header && pos._bucket != trailer){  //Not position of header or trailer
 			size_t index = hash(pos._bucket->_key);	
-	
+
 			if(HashTable[index]->next == pos._bucket && 
 				HashTable[index]->prev == pos._bucket){	//There is only one bucket in 
 				HashTable[index]->next = NULL;			//the index chain
 				HashTable[index]->prev = NULL;
-				pos._bucket->prev->next = pos._bucket->next;
-                        	pos._bucket->next->prev = pos._bucket->prev;
+				if(header->next == pos._bucket){	//Delete first bucket in the hash map
+					header->next = pos._bucket->next;
+					pos._bucket->next->prev = header;	
+				}
+				else if(trailer->prev == pos._bucket){	//Delete last bucket in the hash map
+					trailer->prev = pos._bucket->prev;
+					pos._bucket->prev->next = trailer;	
+				}
+				else{
+					pos._bucket->prev->next = pos._bucket->next;
+                        		pos._bucket->next->prev = pos._bucket->prev;
+				}
 			
 				delete pos._bucket;
 			}
-			else if(HashTable[index]->next == pos._bucket){	//Delete the first bucket in
-				HashTable[index]->next = pos._bucket->next;	//the index chain
-				pos._bucket->prev->next = pos._bucket->next;
-				pos._bucket->next->prev = pos._bucket->prev;
-			
+			else if(HashTable[index]->next == pos._bucket){	//Delete the first bucket in the index chain
+				HashTable[index]->next = pos._bucket->next;
+				if(header->next == pos._bucket){        //Delete first bucket in the hash map
+                                        header->next = pos._bucket->next;
+                                        pos._bucket->next->prev = header;
+                                }
+				else{
+					pos._bucket->prev->next = pos._bucket->next;
+					pos._bucket->next->prev = pos._bucket->prev;
+				}
+
 				delete pos._bucket;
 			}
-			else if(HashTable[index]->prev == pos._bucket){	//Delete the last bucket in 
-				HashTable[index]->prev = pos._bucket->prev;	//the index chain
-				pos._bucket->prev->next = pos._bucket->next;
-                		pos._bucket->next->prev = pos._bucket->prev;
-			
+			else if(HashTable[index]->prev == pos._bucket){	//Delete the last bucket in the index chain
+				HashTable[index]->prev = pos._bucket->prev;	
+				if(trailer->prev == pos._bucket){  //Delete last bucket in the hash map
+                                        trailer->prev = pos._bucket->prev;
+                                        pos._bucket->prev->next = trailer;
+                                }
+				else{
+					pos._bucket->prev->next = pos._bucket->next;
+                			pos._bucket->next->prev = pos._bucket->prev;
+				}
+
 				delete pos._bucket;
 			}
 			else{
@@ -228,8 +275,11 @@ void hash_map<Key,Value>::erase (iterator pos){
 template <typename Key, typename Value>           
 Value hash_map<Key,Value>::operator[] (const Key& key){
 	iterator iter = find(key);
-
-	return iter._bucket->_value;
+	
+	if(iter._bucket != NULL)	//Entry is found in hash map
+		return iter._bucket->_value;
+	
+	return 0;
 }
 
 
