@@ -23,7 +23,7 @@ Implemented member functions of hash_map:
 and member functions of iterator:
 
 	iterator& operator++();
-       	iterator& operator--();
+	iterator& operator--();
 	bool operator==(const iterator& p) const;
 	bool operator!=(const iterator& p) const;
 	Value& operator*();	
