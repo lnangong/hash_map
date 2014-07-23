@@ -8,6 +8,7 @@ Created on July 15, 2014
 Email: lnangong@hawk.iit.edu
 
 Implemented member functions of hash_map:
+
 	size_t hash (const Key& key);
 	size_t size();
 	iterator begin();
@@ -20,6 +21,7 @@ Implemented member functions of hash_map:
 	Value operator[] (const Key& key);
 	
 and member functions of iterator:
+
 	iterator& operator++();
        	iterator& operator--();
 	bool operator==(const iterator& p) const;
