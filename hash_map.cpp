@@ -192,10 +192,12 @@ typename hash_map<Key,Value>::iterator
 hash_map<Key,Value>::find (const Key& key){
 	const size_t index = hash(key);		//Find the index by key
 	iterator iter(HashTable[index]->next);	//First iterator entry
-	
-	for( ; hash(iter._bucket->_key) == index ; ++iter){	//Search the given key int index chain
-		if(iter._bucket->_key == key)
-			return iter;
+
+	if(HashTable[index]->next != NULL){	
+		for( ; hash(iter._bucket->_key) == index ; ++iter){	//Search the given key int index chain
+			if(iter._bucket->_key == key)
+				return iter;
+		}
 	}
 
 	//Entry is not found in the index chain
@@ -264,10 +266,13 @@ void hash_map<Key,Value>::erase (iterator pos){
 
                 		delete pos._bucket;
 			}
+			
+			hash_size--;
 		}	
+
 	}
 	
-	hash_size--;
+	
 }
 
 

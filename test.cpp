@@ -11,11 +11,12 @@ int main(){
 
 	//hash_map instantiation
 	hash_map<string,int> HashMap;
+	
 
 	//insert	
 	HashMap.insert("alpha",10);
 	HashMap.insert("alpha1",20);
-	HashMap.insert("beta",30);
+//	HashMap.insert("beta",30);
 	HashMap.insert("beta1",40);
 	HashMap.insert("gamma",50);
 	HashMap.insert("gamma1",60);
@@ -37,6 +38,8 @@ int main(){
 	cout << "hash map find:" << endl;
 	hash_map<string,int>::iterator it = HashMap.find("alpha1");
 	cout << *it << endl;
+
+	it = HashMap.find("sigma");
 	cout << "\n";
 
 	//hash_map erase
@@ -51,7 +54,7 @@ int main(){
         cout << "\n";
 
 	
-//	it = HashMap.find("sigma");
+	
 
 	//hash_map operator[]
 	cout << "hash map operator[]:" << endl;
