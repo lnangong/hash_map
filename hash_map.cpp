@@ -284,7 +284,7 @@ Value hash_map<Key,Value>::operator[] (const Key& key){
 	if(iter._bucket != NULL)	//Entry is found in hash map
 		return iter._bucket->_value;
 	
-	return 0;
+	return -1;
 }
 
 
