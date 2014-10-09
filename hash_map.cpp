@@ -1,5 +1,5 @@
 
-/*
+/**
  *This hash map C++ STL container is designed by combination of hash table and indexed chaining, 
  *which is doubly linked list can be indexed by the given key.
  *
@@ -23,12 +23,10 @@
  *      Author: Long(Ryan) Nangong
  *      Email: lnangong@hawk.iit.edu
  *	Created on: July 15, 2014
-*/
+ */
 
 #include <iostream>
 #include <string>
-
-using namespace std;
 
 
 //Constructor
@@ -40,12 +38,14 @@ hash_map<Key,Value>::hash_map(){
 		}
 		header = new entry;
 		trailer = new entry;
+		header->prev = header;
 		header->next = trailer;
-		trailer->prev = header;	
+		trailer->prev = header;
+		trailer->next = trailer;	
 		hash_size = 0;
 
-	}catch(bad_alloc& ba){
-		cerr << "exception caught:" << ba.what() << endl;
+	}catch(const std::bad_alloc& ba){
+		std::cerr << "exception caught:" << ba.what() << std::endl;
 	}
 }
 
@@ -57,7 +57,7 @@ hash_map<Key,Value>::~hash_map(){
         for(int i = 0; i < capacity; i++){
                 delete HashTable[i];
 	}
-//	delete[] HashTable;
+
 	delete header;
 	delete trailer;
         hash_size = 0;
@@ -68,7 +68,8 @@ hash_map<Key,Value>::~hash_map(){
 template <typename Key, typename Value>
 size_t hash_map<Key,Value>::hash (const Key& key){
 	size_t index = key[0] % capacity;	//It's a simple hash just for testing
-//	cout << "index of " << key << "=" << index << endl;
+//	std::cout << "index of " << key << "=" << index << std::endl;
+
 	return index;
 }
 
@@ -108,6 +109,10 @@ hash_map<Key,Value>::rend(){     return iterator(header);       }
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator 
 hash_map<Key,Value>::insert (const Key& key, const Value& value){
+	
+	iterator iter =	find(key);
+
+	if(iter._bucket != NULL){ return iterator(NULL); } //Key conflict...
 
 	size_t index = hash(key);		//Get hash index
 
@@ -178,8 +183,8 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 
 		return iterator(bucket);
 
-	}catch(bad_alloc& ba){
-		cerr << "exception caught:" << ba.what() << endl;
+	}catch(const std::bad_alloc& ba){
+		std::cerr << "exception caught:" << ba.what() << std::endl;
 		return iterator(NULL);
 	}
 
@@ -193,16 +198,16 @@ hash_map<Key,Value>::find (const Key& key){
 	const size_t index = hash(key);		//Find the index by key
 	iterator iter(HashTable[index]->next);	//First iterator entry
 
-	if(HashTable[index]->next != NULL){	
+	if(iter._bucket != NULL){	
 		for( ; hash(iter._bucket->_key) == index ; ++iter){	//Search the given key int index chain
 			if(iter._bucket->_key == key)
 				return iter;
 		}
 	}
 
-	//Entry is not found in the index chain
+	//Entry is not found from the index chain
 	iter._bucket = NULL;
-	cout << "Entry with specified key<" << key << "> is not found in the hash map!" << endl;
+	
 	return iter;
 	
 }
@@ -212,7 +217,7 @@ hash_map<Key,Value>::find (const Key& key){
 template <typename Key, typename Value>
 void hash_map<Key,Value>::erase (iterator pos){
 	if(pos._bucket != NULL){
-		if(pos._bucket != header && pos._bucket != trailer){  //Not position of header or trailer
+		if(pos._bucket != header && pos._bucket != trailer){  //Gard condition check
 			size_t index = hash(pos._bucket->_key);	
 
 			if(HashTable[index]->next == pos._bucket && 
@@ -269,22 +274,20 @@ void hash_map<Key,Value>::erase (iterator pos){
 			
 			hash_size--;
 		}	
-
 	}
-	
-	
 }
 
 
 //Hash map operator [] definition
 template <typename Key, typename Value>           
 Value hash_map<Key,Value>::operator[] (const Key& key){
+
 	iterator iter = find(key);
 	
 	if(iter._bucket != NULL)	//Entry is found in hash map
 		return iter._bucket->_value;
 	
-	return -1;
+	return Value();  //Return zero-initialized object
 }
 
 

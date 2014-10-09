@@ -16,18 +16,18 @@ private:
 
 public:
 	class iterator{			//Hash_map iterator
-	private:
-        	entry* _bucket;
-        	iterator(entry* bucket);
-
+	        	
 	public:
+		iterator(entry* bucket);
         	iterator& operator++();
         	iterator& operator--();
 		bool operator==(const iterator& p) const;
 		bool operator!=(const iterator& p) const;
 		Value& operator*();
 		friend class hash_map;
-
+	
+	private:
+        	entry* _bucket;
 	};
 	
 public:					//Hash map member functions

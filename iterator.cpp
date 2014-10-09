@@ -3,7 +3,7 @@
 
 
 template <typename Key, typename Value>
-hash_map<Key,Value>::iterator::iterator(entry* bucket):_bucket(bucket){}
+hash_map<Key,Value>::iterator::iterator(entry* bucket = NULL):_bucket(bucket){}
 
 template <typename Key, typename Value>
 typename hash_map<Key,Value>::iterator&
@@ -28,7 +28,11 @@ bool hash_map<Key,Value>::iterator::operator!=(const iterator& p) const{ return 
 
 
 template <typename Key, typename Value>
-Value& hash_map<Key,Value>::iterator::operator*(){ return _bucket->_value; }
+Value& hash_map<Key,Value>::iterator::operator*(){ 
+	if(_bucket != NULL){ return _bucket->_value; }	
+
+//	return Value();
+}
 
 
 
