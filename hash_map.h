@@ -12,8 +12,6 @@ private:
         	Value _value;          	//Entry value
         	entry* next;          	//next entry
         	entry* prev;          	//previous entry
-	public:
-		entry();
 	};
 
 public:
