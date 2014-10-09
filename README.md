@@ -1,4 +1,4 @@
-hash_map: hash with chaining
+STL hash_map: hash with chaining
 ===============================
 
 Author:Long(Ryan) Nangong
@@ -6,6 +6,8 @@ Author:Long(Ryan) Nangong
 Created on July 15, 2014
 
 Email: lnangong@hawk.iit.edu
+
+*This is unordered hash map, which has constant insert, delete, search time, and suppport forward/backward iteration.
 
 Implemented member functions of hash_map:
 
