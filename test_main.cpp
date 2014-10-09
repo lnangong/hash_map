@@ -45,8 +45,8 @@ int main(){
 	cout << *iter << endl;
 	iter = HashMap.find("gamma1");
 	cout << *iter << endl;
-
-//	iter = HashMap.find("sigma");
+	iter = HashMap.find("sigma");
+	cout << *iter << endl;
 	cout << "\n";
 
 

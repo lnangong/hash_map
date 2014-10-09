@@ -111,7 +111,7 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 	
 	iterator iter =	find(key);
 
-	if(iter._bucket != NULL){ return iterator(NULL); } //Key conflict...
+	if(iter._bucket != trailer){ return iterator(trailer); } //Key conflict...
 
 	size_t index = hash(key);		//Get hash index
 
@@ -184,7 +184,7 @@ hash_map<Key,Value>::insert (const Key& key, const Value& value){
 
 	}catch(const std::bad_alloc& ba){
 		std::cerr << "exception caught:" << ba.what() << std::endl;
-		return iterator(NULL);
+		return iterator(trailer);
 	}
 
 }
@@ -204,10 +204,8 @@ hash_map<Key,Value>::find (const Key& key){
 		}
 	}
 
-	//Entry is not found from the index chain
-	iter._bucket = NULL;
-	
-	return iter;
+	//Entry is not found from the index chain, return trailer bucket
+	return iterator(trailer);
 	
 }
 
@@ -215,65 +213,63 @@ hash_map<Key,Value>::find (const Key& key){
 //Hash map erase
 template <typename Key, typename Value>
 void hash_map<Key,Value>::erase (iterator pos){
-	if(pos._bucket != NULL){
-		if(pos._bucket != header && pos._bucket != trailer){  //Gard condition check
-			size_t index = hash(pos._bucket->_key);	
+	if(pos._bucket != header && pos._bucket != trailer){  //Gard condition check
+		size_t index = hash(pos._bucket->_key);	
 
-			if(HashTable[index]->next == pos._bucket && 
-				HashTable[index]->prev == pos._bucket){	//There is only one bucket in 
-				HashTable[index]->next = NULL;			//the index chain
-				HashTable[index]->prev = NULL;
-				if(header->next == pos._bucket){	//Delete first bucket in the hash map
-					header->next = pos._bucket->next;
-					pos._bucket->next->prev = header;	
-				}
-				else if(trailer->prev == pos._bucket){	//Delete last bucket in the hash map
-					trailer->prev = pos._bucket->prev;
-					pos._bucket->prev->next = trailer;	
-				}
-				else{
-					pos._bucket->prev->next = pos._bucket->next;
-                        		pos._bucket->next->prev = pos._bucket->prev;
-				}
-			
-				delete pos._bucket;
+		if(HashTable[index]->next == pos._bucket && 
+			HashTable[index]->prev == pos._bucket){	//There is only one bucket in 
+			HashTable[index]->next = NULL;			//the index chain
+			HashTable[index]->prev = NULL;
+			if(header->next == pos._bucket){	//Delete first bucket in the hash map
+				header->next = pos._bucket->next;
+				pos._bucket->next->prev = header;	
 			}
-			else if(HashTable[index]->next == pos._bucket){	//Delete the first bucket in the index chain
-				HashTable[index]->next = pos._bucket->next;
-				if(header->next == pos._bucket){        //Delete first bucket in the hash map
-                                        header->next = pos._bucket->next;
-                                        pos._bucket->next->prev = header;
-                                }
-				else{
-					pos._bucket->prev->next = pos._bucket->next;
-					pos._bucket->next->prev = pos._bucket->prev;
-				}
-
-				delete pos._bucket;
-			}
-			else if(HashTable[index]->prev == pos._bucket){	//Delete the last bucket in the index chain
-				HashTable[index]->prev = pos._bucket->prev;	
-				if(trailer->prev == pos._bucket){  //Delete last bucket in the hash map
-                                        trailer->prev = pos._bucket->prev;
-                                        pos._bucket->prev->next = trailer;
-                                }
-				else{
-					pos._bucket->prev->next = pos._bucket->next;
-                			pos._bucket->next->prev = pos._bucket->prev;
-				}
-
-				delete pos._bucket;
+			else if(trailer->prev == pos._bucket){	//Delete last bucket in the hash map
+				trailer->prev = pos._bucket->prev;
+				pos._bucket->prev->next = trailer;	
 			}
 			else{
 				pos._bucket->prev->next = pos._bucket->next;
-                       		pos._bucket->next->prev = pos._bucket->prev;
-
-                		delete pos._bucket;
+				pos._bucket->next->prev = pos._bucket->prev;
 			}
-			
-			hash_size--;
-		}	
-	}
+		
+			delete pos._bucket;
+		}
+		else if(HashTable[index]->next == pos._bucket){	//Delete the first bucket in the index chain
+			HashTable[index]->next = pos._bucket->next;
+			if(header->next == pos._bucket){        //Delete first bucket in the hash map
+				header->next = pos._bucket->next;
+				pos._bucket->next->prev = header;
+			}
+			else{
+				pos._bucket->prev->next = pos._bucket->next;
+				pos._bucket->next->prev = pos._bucket->prev;
+			}
+
+			delete pos._bucket;
+		}
+		else if(HashTable[index]->prev == pos._bucket){	//Delete the last bucket in the index chain
+			HashTable[index]->prev = pos._bucket->prev;	
+			if(trailer->prev == pos._bucket){  //Delete last bucket in the hash map
+				trailer->prev = pos._bucket->prev;
+				pos._bucket->prev->next = trailer;
+			}
+			else{
+				pos._bucket->prev->next = pos._bucket->next;
+				pos._bucket->next->prev = pos._bucket->prev;
+			}
+
+			delete pos._bucket;
+		}
+		else{
+			pos._bucket->prev->next = pos._bucket->next;
+			pos._bucket->next->prev = pos._bucket->prev;
+
+			delete pos._bucket;
+		}
+		
+		hash_size--;
+	}	
 }
 
 
@@ -283,7 +279,7 @@ Value hash_map<Key,Value>::operator[] (const Key& key){
 
 	iterator iter = find(key);
 	
-	if(iter._bucket != NULL)	//Entry is found in hash map
+	if(iter._bucket != trailer)	//Entry is found in hash map
 		return iter._bucket->_value;
 	
 	return Value();  //Return zero-initialized object
