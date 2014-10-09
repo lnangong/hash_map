@@ -34,6 +34,3 @@ Value& hash_map<Key,Value>::iterator::operator*(){
 //	return Value();
 }
 
-
-
-

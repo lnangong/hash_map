@@ -1,4 +1,3 @@
-
 /**
  *This hash map C++ STL container is designed by combination of hash table and indexed chaining, 
  *which is doubly linked list can be indexed by the given key.
