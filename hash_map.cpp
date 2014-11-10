@@ -1,6 +1,8 @@
 /**
- *This hash map C++ STL container is designed by combination of hash table and indexed chaining, 
- *which is doubly linked list can be indexed by the given key.
+ *	hash_map.cpp--member functions of the hash_map
+ *
+ *	This hash map C++ STL container is designed by combination of hash table and indexed chaining, 
+ *	which is doubly linked list can be indexed by the given key.
  *
  *	Hash map design:
  *
@@ -19,7 +21,10 @@
  *            index chain, respectively. In the following comments will use 'entry' and 
  *           'bucket' interchangeably, they are same thing.
  *
- *      Author: Long(Ryan) Nangong
+ *      
+ *	Copyright (c) 2014, Long(Ryan) Nangong.
+ *	All right reserved.
+ *
  *      Email: lnangong@hawk.iit.edu
  *	Created on: July 15, 2014
  */

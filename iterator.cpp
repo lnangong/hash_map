@@ -1,5 +1,13 @@
 
-//These are member functions of the iterator class
+/**
+ *	iterator.cpp--member functions of the iterator class
+ *	
+ *      Copyright (c) 2014, Long(Ryan) Nangong.
+ *      All right reserved.
+ *
+ *      Email: lnangong@hawk.iit.edu
+ *      Created on: July 15, 2014
+ */
 
 
 template <typename Key, typename Value>

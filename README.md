@@ -1,11 +1,13 @@
 STL hash_map: hash with chaining
 ===============================
 
-Author:Long(Ryan) Nangong
-
-Created on July 15, 2014
-
+Copyright (c) 2014, Long(Ryan) Nangong.
+All right reserved.
+ 
 Email: lnangong@hawk.iit.edu
+Created on: July 15, 2014
+
+
 
 *This is unordered hash map, which has constant insert, delete, search time, and suppport forward/backward iteration.
 

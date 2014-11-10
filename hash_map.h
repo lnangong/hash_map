@@ -1,3 +1,12 @@
+/*
+ *	hash_map.h
+ *    
+ *	Copyright (c) 2014, Long(Ryan) Nangong.
+ *      All right reserved.
+ *
+ *      Email: lnangong@hawk.iit.edu
+ *      Created on: July 15, 2014*
+ */
 
 #ifndef _HASH_MAP_H_
 #define _HASH_MAP_H_		//Header guard
